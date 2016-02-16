@@ -14,7 +14,8 @@ TODO:
 		2. try_to_match_speed_with_nearby_boids
 		3. fly_away_from_nearby_boids
 		4. fly_towards_middle
-
+	
+NOTE_1: Adding intensity factors 
 '''
 
 class BoidsMethod(object):
@@ -28,6 +29,8 @@ class BoidsMethod(object):
 		self.interval = 50
 		self.xlim = (-500,1500)
 		self.ylim = (-500,1500)
+		self.formation_distance = 10000
+		self.middle_gravitational_pull = 0.9
 		
 		self.positions  = self.generate_boids_flock( np.array(self.position_bounds[0:2]),np.array(self.position_bounds[2:4]) )
 		self.velocities = self.generate_boids_flock( np.array(self.velocity_bounds[0:2]),np.array(self.velocity_bounds[2:4]) )
@@ -65,7 +68,7 @@ class BoidsMethod(object):
 	def try_to_match_speed_with_nearby_boids(self):
 		for i in range(len(self.update['X Position'])):
 			for j in range(len(self.update['X Position'])):
-				if (self.update['X Position'][j]-self.update['X Position'][i])**2 + (self.update['Y Position'][j]-self.update['Y Position'][i])**2 < 10000:
+				if (self.update['X Position'][j]-self.update['X Position'][i])**2 + (self.update['Y Position'][j]-self.update['Y Position'][i])**2 < self.formation_distance:
 					self.update['X Velocity'][i]=self.update['X Velocity'][i]+(self.update['X Velocity'][j]-self.update['X Velocity'][i])*0.125/len(self.update['X Position'])
 					self.update['Y Velocity'][i]=self.update['Y Velocity'][i]+(self.update['Y Velocity'][j]-self.update['Y Velocity'][i])*0.125/len(self.update['X Position'])
 	
@@ -79,10 +82,10 @@ class BoidsMethod(object):
 	def fly_towards_middle(self):
 		for i in range(len(self.update['X Position'])):
 			for j in range(len(self.update['X Position'])):
-				self.update['X Velocity'][i]=self.update['X Velocity'][i]+(self.update['X Position'][j]-self.update['X Position'][i])*0.01/len(self.update['X Position'])
+				self.update['X Velocity'][i]=self.update['X Velocity'][i]+(self.update['X Position'][j]-self.update['X Position'][i])*0.01/len(self.update['X Position']) * self.middle_gravitational_pull
 		for i in range(len(self.update['X Position'])):
 			for j in range(len(self.update['X Position'])):
-				self.update['Y Velocity'][i]=self.update['Y Velocity'][i]+(self.update['Y Position'][j]-self.update['Y Position'][i])*0.01/len(self.update['X Position'])
+				self.update['Y Velocity'][i]=self.update['Y Velocity'][i]+(self.update['Y Position'][j]-self.update['Y Position'][i])*0.01/len(self.update['X Position'])  * self.middle_gravitational_pull
 
 if __name__ == "__main__":
 	# load factors from yaml file
