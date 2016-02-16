@@ -1,65 +1,104 @@
 from matplotlib import pyplot as plt
 from matplotlib import animation
-import random
 
-# --------------- To move into file (e.g YAML) ---------------
-boids_x=[random.uniform(-450,50.0) for x in range(50)]
-boids_y=[random.uniform(300.0,600.0) for x in range(50)]
-boid_x_velocities=[random.uniform(0,10.0) for x in range(50)]
-boid_y_velocities=[random.uniform(-20.0,20.0) for x in range(50)]
-boids=(boids_x,boids_y,boid_x_velocities,boid_y_velocities)
-# ---------------------------- End ----------------------------
+import os
+import yaml
+import numpy as np
 
-#NOTE: I need to code in 'self.' to this class -- this will be done after I figure out the __init__ and think through the logic of methods of moving the flock in certain directions etc 
+
+'''
+
+TODO: 
+	REFACTOR THE INNER WORKINGS OF:
+		1. move_according_to_velocities
+		2. try_to_match_speed_with_nearby_boids
+		3. fly_away_from_nearby_boids
+		4. fly_towards_middle
+
+'''
 
 class BoidsMethod(object):
-	''' 
-	Description: A class to encase the Boids simulation mathods using object orientation design
-	'''
-	
-	def __init__(self, positions, velocities, fields):
-		self.positions = positions #To code an implementation to initiate flocks
-		self.velocities = velocities #To code an implementation to initiate flocks
-		self.fields = fields #Passed as an array of method calls (methods will be coded in this class)
-	
-	def update_boids(self, boids):
-		xs,ys,xvs,yvs=boids
-		# Fly towards the middle
-		for i in range(len(xs)):
-			for j in range(len(xs)):
-				xvs[i]=xvs[i]+(xs[j]-xs[i])*0.01/len(xs)
-		for i in range(len(xs)):
-			for j in range(len(xs)):
-				yvs[i]=yvs[i]+(ys[j]-ys[i])*0.01/len(xs)
-		# Fly away from nearby boids
-		for i in range(len(xs)):
-			for j in range(len(xs)):
-				if (xs[j]-xs[i])**2 + (ys[j]-ys[i])**2 < 100:
-					xvs[i]=xvs[i]+(xs[i]-xs[j])
-					yvs[i]=yvs[i]+(ys[i]-ys[j])
-		# Try to match speed with nearby boids
-		for i in range(len(xs)):
-			for j in range(len(xs)):
-				if (xs[j]-xs[i])**2 + (ys[j]-ys[i])**2 < 10000:
-					xvs[i]=xvs[i]+(xvs[j]-xvs[i])*0.125/len(xs)
-					yvs[i]=yvs[i]+(yvs[j]-yvs[i])*0.125/len(xs)
-		# Move according to velocities
-		for i in range(len(xs)):
-			xs[i]=xs[i]+xvs[i]
-			ys[i]=ys[i]+yvs[i]
+	def __init__(self, position_bounds, velocity_bounds):
+		
+		self.velocity_bounds = velocity_bounds 
+		self.position_bounds = position_bounds
+		
+		self.count = 50
+		self.frames = 50
+		self.interval = 50
+		self.xlim = (-500,1500)
+		self.ylim = (-500,1500)
+		
+		self.positions  = self.generate_boids_flock( np.array(self.position_bounds[0:2]),np.array(self.position_bounds[2:4]) )
+		self.velocities = self.generate_boids_flock( np.array(self.velocity_bounds[0:2]),np.array(self.velocity_bounds[2:4]) )
+		
+		#Encapsulate into a discionary for readability
+		self.update = {'X Position': self.positions[0], 'Y Position':self.positions[1], 'X Velocity': self.velocities[0],'Y Velocity':self.velocities[1]}
 
+	def delploy_simulation(self):
+		figure = plt.figure()
+		axes = plt.axes(xlim=self.xlim, ylim=self.ylim)
+		self.scatter = axes.scatter(self.positions[0],self.positions[1])
+		anim = animation.FuncAnimation(figure, self.animate, frames = self.frames, interval = self.interval)
+		plt.show()
 
 	def animate(self, frame):
-	   update_boids(boids)
-	   scatter.set_offsets(zip(boids[0],boids[1]))
+	   self.update_boids() #self.positions, self.velocities
+	   self.scatter.set_offsets(self.positions.transpose())
+	   
+	def generate_boids_flock(self, lower_limits, upper_limits):
+		width = abs(upper_limits - lower_limits)
+		return (lower_limits[:, np.newaxis] + np.random.rand(2, self.count) * width[:, np.newaxis])
+	   
 
-
-	def deploy_simulation(self):
-		figure=plt.figure()
-		axes=plt.axes(xlim=(-500,1500), ylim=(-500,1500))
-		scatter=axes.scatter(boids[0],boids[1])
-		anim = animation.FuncAnimation(figure, animate,frames=50, interval=50)
+	def update_boids(self):	
+		self.fly_towards_middle() # Fly towards the middle
+		self.fly_away_from_nearby_boids() # Fly away from nearby boids
+		self.try_to_match_speed_with_nearby_boids() # Try to match speed with nearby boids
+		self.move_according_to_velocities() # Move according to velocities
+	
+	def move_according_to_velocities(self):
+		for i in range(len(self.update['X Position'])):
+			self.update['X Position'][i]=self.update['X Position'][i]+self.update['X Velocity'][i]
+			self.update['Y Position'][i]=self.update['Y Position'][i]+self.update['Y Velocity'][i]
+	
+	def try_to_match_speed_with_nearby_boids(self):
+		for i in range(len(self.update['X Position'])):
+			for j in range(len(self.update['X Position'])):
+				if (self.update['X Position'][j]-self.update['X Position'][i])**2 + (self.update['Y Position'][j]-self.update['Y Position'][i])**2 < 10000:
+					self.update['X Velocity'][i]=self.update['X Velocity'][i]+(self.update['X Velocity'][j]-self.update['X Velocity'][i])*0.125/len(self.update['X Position'])
+					self.update['Y Velocity'][i]=self.update['Y Velocity'][i]+(self.update['Y Velocity'][j]-self.update['Y Velocity'][i])*0.125/len(self.update['X Position'])
+	
+	def fly_away_from_nearby_boids(self):
+		for i in range(len(self.update['X Position'])):
+			for j in range(len(self.update['X Position'])):
+				if (self.update['X Position'][j]-self.update['X Position'][i])**2 + (self.update['Y Position'][j]-self.update['Y Position'][i])**2 < 100:
+					self.update['X Velocity'][i]=self.update['X Velocity'][i]+(self.update['X Position'][i]-self.update['X Position'][j])
+					self.update['Y Velocity'][i]=self.update['Y Velocity'][i]+(self.update['Y Position'][i]-self.update['Y Position'][j])
+	
+	def fly_towards_middle(self):
+		for i in range(len(self.update['X Position'])):
+			for j in range(len(self.update['X Position'])):
+				self.update['X Velocity'][i]=self.update['X Velocity'][i]+(self.update['X Position'][j]-self.update['X Position'][i])*0.01/len(self.update['X Position'])
+		for i in range(len(self.update['X Position'])):
+			for j in range(len(self.update['X Position'])):
+				self.update['Y Velocity'][i]=self.update['Y Velocity'][i]+(self.update['Y Position'][j]-self.update['Y Position'][i])*0.01/len(self.update['X Position'])
 
 if __name__ == "__main__":
-	obj_boid = BoidsMethod()
-    obj_boid.deploy_simulation()
+	# load factors from yaml file
+	
+	with open(os.path.join(os.path.dirname(__file__),'factors','factors.yaml')) as factor_data:
+		test_data = yaml.load(factor_data)['factors']
+		for point in test_data:
+			position_bounds = point.pop('position_bounds')
+			velocity_bounds = point.pop('velocity_bounds')
+	
+	boid_object = BoidsMethod( position_bounds, velocity_bounds )
+	boid_object.delploy_simulation()
+	
+
+	
+	
+	
+	
+	
