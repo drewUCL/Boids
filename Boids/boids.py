@@ -22,6 +22,7 @@ GOOD THINKS TO THINK ABOUT (SMELLS):
 	ALL STAND-ALONE NUMBER TO BE CALLED SOMETHING - DONE
 	SIMPLFY CODE
 	NUMBER OF COLUMNS IN A LINE
+	**VECTORIZE LOOPS**
 '''
 
 class BoidsMethod(object):
@@ -47,33 +48,35 @@ class BoidsMethod(object):
 		#Encapsulate into a discionary for readability
 		self.update = {'X Position': self.positions[0], 'Y Position':self.positions[1], 'X Velocity': self.velocities[0],'Y Velocity':self.velocities[1]}
 		
+	def flatten(self):
+		''' A function to flatten nested loops '''
 		
 	def move_according_to_velocities(self):
-		for i in range(len(self.update['X Position'])):
-			self.update['X Position'][i] = self.update['X Position'][i]+self.update['X Velocity'][i]
-			self.update['Y Position'][i] = self.update['Y Position'][i]+self.update['Y Velocity'][i]
+		for row in range(len(self.update['X Position'])):
+			self.update['X Position'][row] = self.update['X Position'][row]+self.update['X Velocity'][row]
+			self.update['Y Position'][row] = self.update['Y Position'][row]+self.update['Y Velocity'][row]
 	
 	def try_to_match_speed_with_nearby_boids(self):
-		for i in range(len(self.update['X Position'])):
-			for j in range(len(self.update['X Position'])):
-				if (self.update['X Position'][j]-self.update['X Position'][i])**2 + (self.update['Y Position'][j]-self.update['Y Position'][i])**2 < self.threshold:
-					self.update['X Velocity'][i]=self.update['X Velocity'][i]+(self.update['X Velocity'][j]-self.update['X Velocity'][i])*self.speed_with_nearby_boids_calibration/len(self.update['X Position'])
-					self.update['Y Velocity'][i]=self.update['Y Velocity'][i]+(self.update['Y Velocity'][j]-self.update['Y Velocity'][i])*self.speed_with_nearby_boids_calibration/len(self.update['X Position'])
+		for row in range(len(self.update['X Position'])):
+			for col in range(len(self.update['X Position'])):
+				if (self.update['X Position'][col]-self.update['X Position'][row])**2 + (self.update['Y Position'][col]-self.update['Y Position'][row])**2 < self.threshold:
+					self.update['X Velocity'][row]=self.update['X Velocity'][row]+(self.update['X Velocity'][col]-self.update['X Velocity'][row])*self.speed_with_nearby_boids_calibration/len(self.update['X Position'])
+					self.update['Y Velocity'][row]=self.update['Y Velocity'][row]+(self.update['Y Velocity'][col]-self.update['Y Velocity'][row])*self.speed_with_nearby_boids_calibration/len(self.update['X Position'])
 	
 	def fly_away_from_nearby_boids(self):
-		for i in range(len(self.update['X Position'])):
-			for j in range(len(self.update['X Position'])):
-				if (self.update['X Position'][j]-self.update['X Position'][i])**2 + (self.update['Y Position'][j]-self.update['Y Position'][i])**2 < self.must_fly_away:
-					self.update['X Velocity'][i]=self.update['X Velocity'][i]+(self.update['X Position'][i]-self.update['X Position'][j])
-					self.update['Y Velocity'][i]=self.update['Y Velocity'][i]+(self.update['Y Position'][i]-self.update['Y Position'][j])
+		for row in range(len(self.update['X Position'])):
+			for col in range(len(self.update['X Position'])):
+				if (self.update['X Position'][col]-self.update['X Position'][row])**2 + (self.update['Y Position'][col]-self.update['Y Position'][row])**2 < self.must_fly_away:
+					self.update['X Velocity'][row]=self.update['X Velocity'][row]+(self.update['X Position'][row]-self.update['X Position'][col])
+					self.update['Y Velocity'][row]=self.update['Y Velocity'][row]+(self.update['Y Position'][row]-self.update['Y Position'][col])
 	
 	def fly_towards_middle(self):
-		for i in range(len(self.update['X Position'])):
-			for j in range(len(self.update['X Position'])):
-				self.update['X Velocity'][i] = self.update['X Velocity'][i]+(self.update['X Position'][j]-self.update['X Position'][i])*self.fly_to_middle_gravity/len(self.update['X Position'])
-		for i in range(len(self.update['X Position'])):
-			for j in range(len(self.update['X Position'])):
-				self.update['Y Velocity'][i]=self.update['Y Velocity'][i]+(self.update['Y Position'][j]-self.update['Y Position'][i])*self.fly_to_middle_gravity/len(self.update['X Position'])
+		for row in range(len(self.update['X Position'])):
+			for col in range(len(self.update['X Position'])):
+				self.update['X Velocity'][row] = self.update['X Velocity'][row]+(self.update['X Position'][col]-self.update['X Position'][row])*self.fly_to_middle_gravity/len(self.update['X Position'])
+		for row in range(len(self.update['X Position'])):
+			for col in range(len(self.update['X Position'])):
+				self.update['Y Velocity'][row]=self.update['Y Velocity'][row]+(self.update['Y Position'][col]-self.update['Y Position'][row])*self.fly_to_middle_gravity/len(self.update['X Position'])
 	
 	
 	
