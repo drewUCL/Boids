@@ -19,6 +19,7 @@ TODO:
 GOOD THINKS TO THINK ABOUT (SMELLS):
 	DRY CONCEPT - DONE
 	NAMING - DONE
+	ALL STAND-ALONE NUMBER TO BE CALLED SOMETHING - DONE
 	SIMPLFY CODE
 	NUMBER OF COLUMNS IN A LINE
 '''
@@ -35,6 +36,11 @@ class BoidsMethod(object):
 		self.xlim = (-500,1500)
 		self.ylim = (-500,1500)
 		
+		self.threshold = 10000
+		self.must_fly_away = 100
+		self.speed_with_nearby_boids_calibration = 0.125
+		self.fly_to_middle_gravity = 0.01
+		
 		self.positions  = self.generate_boids_flock( np.array(self.position_bounds[0:2]),np.array(self.position_bounds[2:4]) )
 		self.velocities = self.generate_boids_flock( np.array(self.velocity_bounds[0:2]),np.array(self.velocity_bounds[2:4]) )
 		
@@ -50,24 +56,24 @@ class BoidsMethod(object):
 	def try_to_match_speed_with_nearby_boids(self):
 		for i in range(len(self.update['X Position'])):
 			for j in range(len(self.update['X Position'])):
-				if (self.update['X Position'][j]-self.update['X Position'][i])**2 + (self.update['Y Position'][j]-self.update['Y Position'][i])**2 < 10000:
-					self.update['X Velocity'][i]=self.update['X Velocity'][i]+(self.update['X Velocity'][j]-self.update['X Velocity'][i])*0.125/len(self.update['X Position'])
-					self.update['Y Velocity'][i]=self.update['Y Velocity'][i]+(self.update['Y Velocity'][j]-self.update['Y Velocity'][i])*0.125/len(self.update['X Position'])
+				if (self.update['X Position'][j]-self.update['X Position'][i])**2 + (self.update['Y Position'][j]-self.update['Y Position'][i])**2 < self.threshold:
+					self.update['X Velocity'][i]=self.update['X Velocity'][i]+(self.update['X Velocity'][j]-self.update['X Velocity'][i])*self.speed_with_nearby_boids_calibration/len(self.update['X Position'])
+					self.update['Y Velocity'][i]=self.update['Y Velocity'][i]+(self.update['Y Velocity'][j]-self.update['Y Velocity'][i])*self.speed_with_nearby_boids_calibration/len(self.update['X Position'])
 	
 	def fly_away_from_nearby_boids(self):
 		for i in range(len(self.update['X Position'])):
 			for j in range(len(self.update['X Position'])):
-				if (self.update['X Position'][j]-self.update['X Position'][i])**2 + (self.update['Y Position'][j]-self.update['Y Position'][i])**2 < 100:
+				if (self.update['X Position'][j]-self.update['X Position'][i])**2 + (self.update['Y Position'][j]-self.update['Y Position'][i])**2 < self.must_fly_away:
 					self.update['X Velocity'][i]=self.update['X Velocity'][i]+(self.update['X Position'][i]-self.update['X Position'][j])
 					self.update['Y Velocity'][i]=self.update['Y Velocity'][i]+(self.update['Y Position'][i]-self.update['Y Position'][j])
 	
 	def fly_towards_middle(self):
 		for i in range(len(self.update['X Position'])):
 			for j in range(len(self.update['X Position'])):
-				self.update['X Velocity'][i] = self.update['X Velocity'][i]+(self.update['X Position'][j]-self.update['X Position'][i])*0.01/len(self.update['X Position'])
+				self.update['X Velocity'][i] = self.update['X Velocity'][i]+(self.update['X Position'][j]-self.update['X Position'][i])*self.fly_to_middle_gravity/len(self.update['X Position'])
 		for i in range(len(self.update['X Position'])):
 			for j in range(len(self.update['X Position'])):
-				self.update['Y Velocity'][i]=self.update['Y Velocity'][i]+(self.update['Y Position'][j]-self.update['Y Position'][i])*0.01/len(self.update['X Position'])
+				self.update['Y Velocity'][i]=self.update['Y Velocity'][i]+(self.update['Y Position'][j]-self.update['Y Position'][i])*self.fly_to_middle_gravity/len(self.update['X Position'])
 	
 	
 	
