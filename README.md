@@ -17,11 +17,19 @@ The Boids library is now installed on your machine and ready to use.
 
 ##Example Usage
 
+After install of the programme, you can run it using the follwoing command:
+
++`Boids --config config_file_location.cfg`
+
+The above command has the optional parameter of --config (or -c if you would like to use the shortcut). You do not need to specify a configuration file as it will default to the parameters shown in **Parameter Config**. To simply run the programme with the default configuration just run `Boids` in your command line.
+
+If you wish to specify your own config file please refer to the section below for further assistance.
 
 ##Parameter Config
 
 The config file that is used as default is shown exhibited below with name placeholders. If you are going to load your own config file then please format as below:
 
+**Note:** You do not need to fill in all the parameters (it will just use the default parameters). However you **must** specify each section in the config file: `[Boids], [Axis_limits], [Flock_Dynamics]`
 ```
 [Boids]
 count = input_number_of_birds_in_flock
