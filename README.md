@@ -43,19 +43,19 @@ fly_to_middle_gravity = gravitational_pull_to_flock_center
 
 The parameters are defaulted to the values in the table if you do not choose to upload your own config file.
 
-| Parameters                          | Default Value           | Description  |
-| ----------------------------------- |:-----------------------:| ------------:|
-| count                               | 50                      | Number of birds in the flock |
-| frames                              | 50                      | Number of frames in the animation |
-| Interval                            | 50                      | The amount of time that passes between each animation |
-| position_bounds                     | [-450, 300, 50, 600]    | The start position limits of the flock |
-| velocity_bounds                     | [0, -20, 10, 20]        | The start velocity limits of the flock |
-| xlim                                | [-500,1500]             | The x axis bound range |
-| ylim                                | [-500,1500]             | The y axis bound range |
-| threshold                           | 1000                    | The maximum distance a bird can be seperated by before forcing it back into the formation |
-| must_fly_away                       | 100                     | The maximum distance to another bird before forcing a bird to fly towards the flock center |
-| speed_with_nearby_boids_calibration | 0.125                   | The possibility of a bird betting too close to another |
-| fly_to_middle_gravity               | 0.01                    | The gravitational pull force implied to force a bird to fly towards the center of the flock |
+| Parameters                          | Default Value                        | Description   |
+| ----------------------------------- |:------------------------------------:| :------------:|
+| count                               | 50                                   | Number of birds in the flock |
+| frames                              | 50                                   | Number of frames in the animation |
+| Interval                            | 50                                   | The amount of time that passes between each animation |
+| position_bounds                     | [-450, 300, 50, 600]                 | The start position limits of the flock |
+| velocity_bounds                     | [0, -20, 10, 20]                     | The start velocity limits of the flock |
+| xlim                                | [-500,1500]                          | The x axis bound range |
+| ylim                                | [-500,1500]                          | The y axis bound range |
+| threshold                           | 1000                                 | The maximum distance a bird can be seperated by before forcing it back into the formation |
+| must_fly_away                       | 100                                  | The maximum distance to another bird before forcing a bird to fly towards the flock center |
+| speed_with_nearby_boids_calibration | 0.125                                | The possibility of a bird betting too close to another |
+| fly_to_middle_gravity               | 0.01                                 | The gravitational pull force implied to force a bird to fly towards the center of the flock |
 
 If you try to upload your own config file and this fails, the programme will give you the option of running Boids with the default parameters.
 
