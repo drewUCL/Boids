@@ -28,21 +28,34 @@ GOOD THINKS TO THINK ABOUT (SMELLS):
 '''
 
 class BoidsMethod(object):
-	def __init__(self, position_bounds, velocity_bounds):
+	def __init__(self, 
+				 position_bounds = [-450.0, 300.0, 50.0, 600.0], 
+				 velocity_bounds = [0.0, -20.0, 10.0, 20.0],
+			     count = 50,
+				 frames = 50,
+				 interval = 50,
+				 xlim = (-500,1500),
+				 ylim = (-500,1500),
+				 threshold = 10000,
+				 must_fly_away = 100,
+				 speed_with_nearby_boids_calibration = 0.125,
+				 fly_to_middle_gravity = 0.01
+				 ):
+		''' The init has been provided with default values to overload by the config file from the command line interface. If the command load did not work the user will have the option to simply use the defaults '''
 		
 		self.velocity_bounds = velocity_bounds 
 		self.position_bounds = position_bounds
 		
-		self.count = 50
-		self.frames = 50
-		self.interval = 50
-		self.xlim = (-500,1500)
-		self.ylim = (-500,1500)
+		self.count = count
+		self.frames = frames
+		self.interval = interval
+		self.xlim = xlim
+		self.ylim = ylim
 		
-		self.threshold = 10000
-		self.must_fly_away = 100
-		self.speed_with_nearby_boids_calibration = 0.125
-		self.fly_to_middle_gravity = 0.01
+		self.threshold = threshold
+		self.must_fly_away = must_fly_away
+		self.speed_with_nearby_boids_calibration = speed_with_nearby_boids_calibration
+		self.fly_to_middle_gravity = fly_to_middle_gravity
 		
 		self.positions  = self.generate_boids_flock( np.array(self.position_bounds[0:2]),np.array(self.position_bounds[2:4]) )
 		self.velocities = self.generate_boids_flock( np.array(self.velocity_bounds[0:2]),np.array(self.velocity_bounds[2:4]) )
@@ -110,13 +123,19 @@ class BoidsMethod(object):
 if __name__ == "__main__":
 	# load factors from yaml file
 	
+	'''
 	with open(os.path.join(os.path.dirname(__file__),'factors','factors.yaml')) as factor_data:
 		test_data = yaml.load(factor_data)['factors']
 		for point in test_data:
 			position_bounds = point.pop('position_bounds')
 			velocity_bounds = point.pop('velocity_bounds')
+	'''
 	
-	boid_object = BoidsMethod( position_bounds, velocity_bounds )
+	# boid_object = BoidsMethod( position_bounds, velocity_bounds )
+	
+	# Now can call the object with simply the default values 
+	# It has been done like this so the user has the ability to overload from their own config file
+	boid_object = BoidsMethod()
 	boid_object.delploy_simulation()
 	
 

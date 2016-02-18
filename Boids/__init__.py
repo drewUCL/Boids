@@ -4,12 +4,11 @@ import ConfigParser
 import traceback
 import logging
 import datetime 
+import sys
 
 from matplotlib import pyplot as plt
 from argparse import ArgumentParser
 from Boids import BoidsMethod
-
-
 
 '''
 TODO:
@@ -18,6 +17,16 @@ TODO:
 	3. Exception handling - add firther IOError etc etc
 
 '''
+
+def user_run_defaults():
+	user_input = raw_input('would you like to run with default values? [y/n]')
+	if(user_input == 'Y' or user_input == 'y'):
+		boid_object = BoidsMethod()
+		boid_object.delploy_simulation()
+	else:
+		print '## You did not run the Boids programme with the default file'
+		print '## Exiting programme'
+		sys.exit()
 
 def command():
 	''' 
@@ -54,9 +63,16 @@ def command():
 			fly_to_middle_gravity = configuration.getfloat('Flock_Dynamics','fly_to_middle_gravity')
 			
 		## Now load the parameters into the BoidMethod
-			
+		boid_object = BoidsMethod( position_bounds, velocity_bounds )
+		boid_object.delploy_simulation()
+		
+	except IOError as e:
+		''' Catch this IO error (very specific error handling) '''
+		print '## Your config file did not load'
+		user_run_defaults()
 			
 	except Exception as e:
+		''' Catch more general errors and show a traceback allowing an easy debug '''
 		tracker = datetime.now()
 		print("THERE HAS BEEN AN ERROR WITH LOADING THE CONFIGURATIONS INTO THIS PROGRAMME AT %s" % datetime.strptime(tracker, "%d/%m/%y %H:%M"))
 		logging.error(traceback.format_exc())
