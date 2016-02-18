@@ -3,6 +3,7 @@ import ConfigParser
 
 import traceback
 import logging 
+import json
 import sys
 
 from matplotlib import pyplot as plt
@@ -50,18 +51,20 @@ def command():
 		with open(args.config) as c:
 			configuration.readfp(c)
 			
-			#use data specific getters and setters, e.g getint for int and getfloat for float. First argument is in the [] within the config file is the section of the data
+			## Use data specific getters and setters, e.g getint for int and getfloat for float. First argument is in the [] within the config file is the section of the data
+			
+			## NOTE: json.loads is required when picking up arrays etc from config file
 			
 			#Load boids main data [Boids]
 			count = configuration.getint('Boids','count')
 			frames = configuration.getint('Boids','frames')
 			interval = configuration.getint('Boids','interval')
-			position_bounds = configuration.get('Boids','position_bounds')
-			velocity_bounds = configuration.get('Boids','velocity_bounds')
+			position_bounds = json.loads(configuration.get('Boids','position_bounds'))
+			velocity_bounds = json.loads(configuration.get('Boids','velocity_bounds'))
 			
 			#Load axis data [Axis_limits]
-			xlim = configuration.get('Axis_limits','xlim')
-			ylim = configuration.get('Axis_limits','ylim')
+			xlim = json.loads(configuration.get('Axis_limits','xlim'))
+			ylim = json.loads(configuration.get('Axis_limits','ylim'))
 			
 			# Load flock dynamics [Flock_Dynamics]
 			threshold = configuration.getint('Flock_Dynamics','threshold')
