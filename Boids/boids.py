@@ -8,6 +8,7 @@ import numpy as np
 
 '''
 
+
 TODO: 
 	REFACTOR THE INNER WORKINGS OF:
 		1. move_according_to_velocities

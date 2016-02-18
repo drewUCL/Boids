@@ -2,15 +2,22 @@ import json
 import ConfigParser 
 
 import traceback
-import logging
-import datetime 
+import logging 
 import sys
 
 from matplotlib import pyplot as plt
 from argparse import ArgumentParser
+from time import gmtime, strftime
 from boids import BoidsMethod
 
 '''
+pip install git+https://github.com/drewUCL/Boids.git
+
+OR
+1. Download
+2. python setup.py install --record files.txt
+
+
 TODO:
 	1. Create configeration file - DONE
 	2. Link configs - DONE
@@ -40,7 +47,7 @@ def command():
 	
 	try : 
 		configuration = ConfigParser.ConfigParser()
-		with open(os.path.join(os.path.dirname(__file__),'factors',args.config)) as c:
+		with open(args.config) as c:
 			configuration.readfp(c)
 			
 			#use data specific getters and setters, e.g getint for int and getfloat for float. First argument is in the [] within the config file is the section of the data
@@ -53,8 +60,8 @@ def command():
 			velocity_bounds = configuration.get('Boids','velocity_bounds')
 			
 			#Load axis data [Axis_limits]
-			xlim = configeration.get('Axis_limits','xlim')
-			ylim = configeration.get('Axis_limits','ylim')
+			xlim = configuration.get('Axis_limits','xlim')
+			ylim = configuration.get('Axis_limits','ylim')
 			
 			# Load flock dynamics [Flock_Dynamics]
 			threshold = configuration.getint('Flock_Dynamics','threshold')
@@ -85,6 +92,6 @@ def command():
 			
 	except Exception as e:
 		''' Catch more general errors and show a traceback allowing an easy debug '''
-		tracker = datetime.now()
-		print("THERE HAS BEEN AN ERROR WITH LOADING THE CONFIGURATIONS INTO THIS PROGRAMME AT %s" % datetime.strptime(tracker, "%d/%m/%y %H:%M"))
+		tracker = strftime("%Y-%m-%d %H:%M:%S", gmtime())
+		print "THERE HAS BEEN AN ERROR WITH LOADING THE CONFIGURATIONS INTO THIS PROGRAMME AT %s" % tracker
 		logging.error(traceback.format_exc())
