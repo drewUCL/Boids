@@ -22,7 +22,8 @@ The Boids library is now installed on your machine and ready to use.
 
 The config file that is used as default is shown exhibited below with name placeholders. The parameters are defaulted to the values in {} if you do not choose to upload your own config file.
 
-`[Boids]
+```
+[Boids]
 count = input_number_of_birds_in_flock  {50}
 frames = input_number_of_frames_in_animation  {50}
 interval = input_time_interval_between_frames  {50}
@@ -37,8 +38,8 @@ ylim = [y_axis_min,y_axis_max]  {[-500,1500]}
 threshold = max_distance_before_forcing_into_formation  {10000}
 must_fly_away = max_distance_from_another_bird_before_requiring_to_fly_towards_middle  {100}
 speed_with_nearby_boids_calibration = likelyhood_of_birds_getting_too_close  {0.125} 
-fly_to_middle_gravity = gravitational_pull_to_flock_center  {0.01}`
-
+fly_to_middle_gravity = gravitational_pull_to_flock_center  {0.01}
+```
 
 If you try to upload your own config file and this fails, the programme will give you the option of running Boids with the default parameters.
 
