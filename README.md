@@ -10,8 +10,8 @@ A Distributed Behavioral Model"*. A copy of this paper can be found <a href="htt
 - If the download has been compressed into a zip file, extract
 - Navigate to Boids folder root from your command line
 - Now on your command line type:
-- **Windows**    : `python Greengraph/setup.py install`
-- **Other/Mac**  : `sudo python Greengraph/setup.py install`
+- **Windows**    : `python Boids/setup.py install`
+- **Other/Mac**  : `sudo python Boids/setup.py install`
 
 The Boids library is now installed on your machine and ready to use. 
 
@@ -19,7 +19,7 @@ The Boids library is now installed on your machine and ready to use.
 
 After install of the programme, you can run it using the follwoing command:
 
-+`Boids --config config_file_location.cfg`
++ `Boids --config config_file_location.cfg`
 
 The above command has the optional parameter of --config (or -c if you would like to use the shortcut). You do not need to specify a configuration file as it will default to the parameters shown in **Parameter Config**. To simply run the programme with the default configuration just run `Boids` in your command line.
 
