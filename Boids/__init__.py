@@ -8,7 +8,7 @@ import sys
 
 from matplotlib import pyplot as plt
 from argparse import ArgumentParser
-from Boids import BoidsMethod
+from boids import BoidsMethod
 
 '''
 TODO:
@@ -63,7 +63,19 @@ def command():
 			fly_to_middle_gravity = configuration.getfloat('Flock_Dynamics','fly_to_middle_gravity')
 			
 		## Now load the parameters into the BoidMethod
-		boid_object = BoidsMethod( position_bounds, velocity_bounds )
+		boid_object = BoidsMethod( 
+					position_bounds, 
+					velocity_bounds,
+					count,
+					frames,
+					interval,
+					xlim,
+					ylim,
+					threshold,
+					must_fly_away,
+					speed_with_nearby_boids_calibration,
+					fly_to_middle_gravity
+					)
 		boid_object.delploy_simulation()
 		
 	except IOError as e:
