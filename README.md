@@ -6,6 +6,15 @@ A Distributed Behavioral Model"*. A copy of this paper can be found <a href="htt
 
 ##Install Instructions
 
+- Download Boids to your machine from GitHub
+- If the download has been compressed into a zip file, extract
+- Navigate to Boids folder root from your command line
+- Now on your command line type:
+- **Windows**    : `python Greengraph/setup.py install`
+- **Other/Mac**  : `sudo python Greengraph/setup.py install`
+
+The Boids library is now installed on your machine and ready to use. 
+
 ##Parameter Config
 
 ##Example Usage
