@@ -6,29 +6,11 @@ import yaml
 import numpy as np
 
 
-'''
-
-
-TODO: 
-	REFACTOR THE INNER WORKINGS OF:
-		1. move_according_to_velocities
-		2. try_to_match_speed_with_nearby_boids
-		3. fly_away_from_nearby_boids
-		4. fly_towards_middle
-
-		
-GOOD THINKS TO THINK ABOUT (SMELLS):
-	DRY CONCEPT - DONE
-	NAMING - DONE
-	ALL STAND-ALONE NUMBER TO BE CALLED SOMETHING - DONE
-	SIMPLFY CODE
-	NUMBER OF COLUMNS IN A LINE
-	**VECTORIZE LOOPS**
-	
-	NOTE: UPDATE BOIDS CLASS WITH DEFAULTS WHICH CAN BE OVERLOADED - MAYBE ADD THEM TO THE YAML FILE
-'''
-
 class BoidsMethod(object):
+	'''
+	Description: A class to allow execution of boids methods 
+	'''
+	
 	def __init__(self, 
 				 position_bounds = [-450.0, 300.0, 50.0, 600.0], 
 				 velocity_bounds = [0.0, -20.0, 10.0, 20.0],
@@ -37,8 +19,8 @@ class BoidsMethod(object):
 				 interval = 50,
 				 xlim = (-500,1500),
 				 ylim = (-500,1500),
-				 threshold = 10000,
-				 must_fly_away = 100,
+				 threshold = 10000, #Threshold for matching speeds
+				 must_fly_away = 100, #Threshold for flying away from nearby boids
 				 speed_with_nearby_boids_calibration = 0.125,
 				 fly_to_middle_gravity = 0.01
 				 ):
@@ -58,47 +40,48 @@ class BoidsMethod(object):
 		self.speed_with_nearby_boids_calibration = speed_with_nearby_boids_calibration
 		self.fly_to_middle_gravity = fly_to_middle_gravity
 		
-		self.positions  = self.generate_boids_flock( np.array(self.position_bounds[0:2]),np.array(self.position_bounds[2:4]) )
-		self.velocities = self.generate_boids_flock( np.array(self.velocity_bounds[0:2]),np.array(self.velocity_bounds[2:4]) )
+		self.positions  = self.generate_boids_flock( np.array(self.position_bounds[0:2]),
+													 np.array(self.position_bounds[2:4])
+													)
+		self.velocities = self.generate_boids_flock( np.array(self.velocity_bounds[0:2]),
+													 np.array(self.velocity_bounds[2:4])
+													)
 		
-		#Encapsulate into a discionary for readability
-		self.update = {'X Position': self.positions[0], 'Y Position':self.positions[1], 'X Velocity': self.velocities[0],'Y Velocity':self.velocities[1]}
-		
-	def flatten(self):
-		''' A function to flatten nested loops '''
 		
 	def move_according_to_velocities(self):
-		for row in range(len(self.update['X Position'])):
-			self.update['X Position'][row] = self.update['X Position'][row]+self.update['X Velocity'][row]
-			self.update['Y Position'][row] = self.update['Y Position'][row]+self.update['Y Velocity'][row]
+		self.positions += self.velocities
 	
 	def try_to_match_speed_with_nearby_boids(self):
-		for row in range(len(self.update['X Position'])):
-			for col in range(len(self.update['X Position'])):
-				if (self.update['X Position'][col]-self.update['X Position'][row])**2 + (self.update['Y Position'][col]-self.update['Y Position'][row])**2 < self.threshold:
-					self.update['X Velocity'][row]=self.update['X Velocity'][row]+(self.update['X Velocity'][col]-self.update['X Velocity'][row])*self.speed_with_nearby_boids_calibration/len(self.update['X Position'])
-					self.update['Y Velocity'][row]=self.update['Y Velocity'][row]+(self.update['Y Velocity'][col]-self.update['Y Velocity'][row])*self.speed_with_nearby_boids_calibration/len(self.update['X Position'])
+		position_difference = self.find_differences(self.positions)
+		velocity_difference = self.find_differences(self.velocities)
+		distances = self.compute_limit(position_difference, self.threshold)
+		reset_velocity_position_rule = self.limit_descisions(velocity_difference, distances)
+		self.velocities -= np.mean(reset_velocity_position_rule,1) * self.speed_with_nearby_boids_calibration
+		
+	def limit_descisions(self, differences, distance):
+		differences[0,:,:][distance] = 0 
+		differences[1,:,:][distance] = 0
+		return differences
 	
+	def compute_limit(self, differences, threshold_value):
+		square_error = differences**2
+		sum_square_error = np.sum(square_error,0)
+		return sum_square_error > threshold_value
+	
+	def find_differences(self, positions):
+		difference = positions[:,np.newaxis,:] - positions[:,:,np.newaxis]
+		return difference 
+		
 	def fly_away_from_nearby_boids(self):
-		for row in range(len(self.update['X Position'])):
-			for col in range(len(self.update['X Position'])):
-				if (self.update['X Position'][col]-self.update['X Position'][row])**2 + (self.update['Y Position'][col]-self.update['Y Position'][row])**2 < self.must_fly_away:
-					self.update['X Velocity'][row]=self.update['X Velocity'][row]+(self.update['X Position'][row]-self.update['X Position'][col])
-					self.update['Y Velocity'][row]=self.update['Y Velocity'][row]+(self.update['Y Position'][row]-self.update['Y Position'][col])
+		differences = self.find_differences(self.positions)
+		distance = self.compute_limit(differences, self.must_fly_away)
+		seperation_rules = self.limit_descisions(differences, distance)
+		self.velocities += np.sum(seperation_rules,1)
 	
 	def fly_towards_middle(self):
-		for row in range(len(self.update['X Position'])):
-			for col in range(len(self.update['X Position'])):
-				self.update['X Velocity'][row] = self.update['X Velocity'][row]+(self.update['X Position'][col]-self.update['X Position'][row])*self.fly_to_middle_gravity/len(self.update['X Position'])
-		for row in range(len(self.update['X Position'])):
-			for col in range(len(self.update['X Position'])):
-				self.update['Y Velocity'][row]=self.update['Y Velocity'][row]+(self.update['Y Position'][col]-self.update['Y Position'][row])*self.fly_to_middle_gravity/len(self.update['X Position'])
-	
-	
-	
-	# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	''' THE BELOW FUNCTIONS ARE DONE '''
-	# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		center = np.mean(self.positions,1)
+		find_direction_to_travel = self.positions - center[:,np.newaxis]
+		self.velocities -= find_direction_to_travel * self.fly_to_middle_gravity
 	
 	def generate_boids_flock(self, lower_bound, upper_bound):
 		width = abs(lower_bound - upper_bound)
