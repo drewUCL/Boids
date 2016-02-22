@@ -19,8 +19,8 @@ class BoidsMethod(object):
 				 interval = 50,
 				 xlim = (-500,1500),
 				 ylim = (-500,1500),
-				 threshold = 10000, #Threshold for matching speeds
-				 must_fly_away = 100, #Threshold for flying away from nearby boids
+				 threshold = 10000, # Threshold for matching speeds
+				 must_fly_away = 100, # Threshold for flying away from nearby boids
 				 speed_with_nearby_boids_calibration = 0.125,
 				 fly_to_middle_gravity = 0.01
 				 ):
@@ -105,19 +105,7 @@ class BoidsMethod(object):
 		self.move_according_to_velocities() # Move according to velocities
 
 if __name__ == "__main__":
-	# load factors from yaml file
-	
-	'''
-	with open(os.path.join(os.path.dirname(__file__),'factors','factors.yaml')) as factor_data:
-		test_data = yaml.load(factor_data)['factors']
-		for point in test_data:
-			position_bounds = point.pop('position_bounds')
-			velocity_bounds = point.pop('velocity_bounds')
-	'''
-	
-	# boid_object = BoidsMethod( position_bounds, velocity_bounds )
-	
-	# Now can call the object with simply the default values 
+	# The object with simply the default values 
 	# It has been done like this so the user has the ability to overload from their own config file
 	boid_object = BoidsMethod()
 	boid_object.delploy_simulation()
