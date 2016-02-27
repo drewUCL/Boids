@@ -11,20 +11,11 @@ from argparse import ArgumentParser
 from time import gmtime, strftime
 from boids import BoidsMethod
 
-'''
-pip install git+https://github.com/drewUCL/Boids.git
+## Global variables allow me to test the command line
+## Once tested one would usually put them back at the top of command function
+parser = ArgumentParser(prog="Boids", description = "The Boids Flocking Bird Simulation")
+parser.add_argument('--config','-c',help='Please select a config file',default='config.cfg')
 
-OR
-1. Download
-2. python setup.py install --record files.txt
-
-
-TODO:
-	1. Create configeration file - DONE
-	2. Link configs - DONE
-	3. Exception handling - add firther IOError etc etc
-
-'''
 
 def user_run_defaults():
 	user_input = raw_input('would you like to run with default values? [y/n]')
@@ -41,8 +32,6 @@ def command():
 	Description: A function to communicate with the command line. This function is linked with the setup.py file.
 	'''
 	
-	parser = ArgumentParser(prog="Boids", description = "The Boids Flocking Bird Simulation")
-	parser.add_argument('--config','-c',help='Please select a config file',default='config.cfg')
 	args = parser.parse_args()
 	
 	

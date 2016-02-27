@@ -1,4 +1,0 @@
-factors:
- - position_bounds: [-450.0, 300.0, 50.0, 600.0]
-   velocity_bounds: [0.0, -20.0, 10.0, 20.0]
-   
