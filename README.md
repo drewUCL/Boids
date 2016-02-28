@@ -13,6 +13,10 @@ A Distributed Behavioral Model"*. A copy of this paper can be found <a href="htt
 - **Windows**    : `python Boids/setup.py install`
 - **Other/Mac**  : `sudo python Boids/setup.py install`
 
+**pip install**
+- Assuming you have git shell, type: 
+`pip install git+https://github.com/drewUCL/Boids.git`
+
 The Boids library is now installed on your machine and ready to use. 
 
 ##Example Usage
