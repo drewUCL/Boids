@@ -66,7 +66,7 @@ The parameters are defaulted to the values in the table if you do not choose to 
 | ylim                                | [-500,1500]                          | The y axis bound range |
 | threshold                           | 1000                                 | The maximum distance a bird can be seperated by before forcing it back into the formation |
 | must_fly_away                       | 100                                  | The maximum distance to another bird before forcing a bird to fly towards the flock center |
-| speed_with_nearby_boids_calibration | 0.125                                | The possibility of a bird betting too close to another |
+| speed_with_nearby_boids_calibration | 0.125                                | The possibility of a bird getting too close to another |
 | fly_to_middle_gravity               | 0.01                                 | The gravitational pull force implied to force a bird to fly towards the center of the flock |
 
 If you try to upload your own config file and this fails, the programme will give you the option of running Boids with the default parameters.
