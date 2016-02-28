@@ -2,6 +2,6 @@ The Boids library is derived from the James Hetherington's implementation 'bad-b
 
 <strong>To cite this boids implementation, please include the following references: </strong>
 
-[1] MPHYG001: UCL Research Software Engineering with Python: http://development.rc.ucl.ac.uk/training/engineering
-[2] James Hetherington, GitHub repo: https://github.com/jamespjh/bad-boids
+[1] MPHYG001: UCL Research Software Engineering with Python: http://development.rc.ucl.ac.uk/training/engineering <br/>
+[2] James Hetherington, GitHub repo: https://github.com/jamespjh/bad-boids <br/>
 [3] Andrew D. Mann, GitHub repo: https://github.com/drewUCL/Boids
