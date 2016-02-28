@@ -41,12 +41,9 @@ class BoidsMethod(object):
 		self.fly_to_middle_gravity = fly_to_middle_gravity
 		
 		self.positions  = self.generate_boids_flock( np.array(self.position_bounds[0:2]),
-													 np.array(self.position_bounds[2:4])
-													)
+		                                             np.array(self.position_bounds[2:4]) )
 		self.velocities = self.generate_boids_flock( np.array(self.velocity_bounds[0:2]),
-													 np.array(self.velocity_bounds[2:4])
-													)
-		
+		                                             np.array(self.velocity_bounds[2:4]) )
 		
 	def move_according_to_velocities(self):
 		self.positions += self.velocities
@@ -56,8 +53,8 @@ class BoidsMethod(object):
 		velocity_difference = self.find_differences(self.velocities)
 		distances = self.compute_limit(position_difference, self.threshold)
 		reset_velocity_position_rule = self.limit_descisions(velocity_difference, distances)
-		self.velocities -= np.mean(reset_velocity_position_rule,1) * \
-							self.speed_with_nearby_boids_calibration
+		self.velocities -= np.mean( reset_velocity_position_rule,1 ) * \
+		                            self.speed_with_nearby_boids_calibration
 		
 	def limit_descisions(self, differences, distance):
 		differences[0,:,:][distance] = 0 
@@ -71,7 +68,7 @@ class BoidsMethod(object):
 	
 	def find_differences(self, positions):
 		difference = positions[:,np.newaxis,:] - \
-					 positions[:,:,np.newaxis]
+		             positions[:,:,np.newaxis]
 		return difference 
 		
 	def fly_away_from_nearby_boids(self):
@@ -84,20 +81,21 @@ class BoidsMethod(object):
 		center = np.mean(self.positions,1)
 		find_direction_to_travel = self.positions - center[:,np.newaxis]
 		self.velocities -= find_direction_to_travel * \
-						   self.fly_to_middle_gravity
+		                   self.fly_to_middle_gravity
 	
 	def generate_boids_flock(self, lower_bound, upper_bound):
 		width = abs(lower_bound - upper_bound)
 		return (lower_bound[:, np.newaxis] + np.random.rand(2, self.count) \
-				* width[:, np.newaxis])
+		        * width[:, np.newaxis])
 	
 	def delploy_simulation(self):
 		figure = plt.figure()
 		axes = plt.axes(xlim=self.xlim, ylim=self.ylim)
 		self.scatter = axes.scatter(self.positions[0],self.positions[1])
-		anim = animation.FuncAnimation(figure, self.animate,
-										frames = self.frames, 
-										interval = self.interval)
+		anim = animation.FuncAnimation( figure,
+		                                self.animate,
+										frames = self.frames,
+										interval = self.interval )
 		plt.show()
 
 	def animate(self, frame):
