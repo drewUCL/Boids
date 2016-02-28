@@ -23,7 +23,11 @@ class BoidsMethod(object):
 	              must_fly_away = 100, # Threshold for flying away from nearby boids
 	              speed_with_nearby_boids_calibration = 0.125,
 	              fly_to_middle_gravity = 0.01 ):
-		''' The init has been provided with default values to overload by the config file from the command line interface. If the command load did not work the user will have the option to simply use the defaults '''
+		''' 
+		The init has been provided with default values to overload by the
+		config file from the command line interface. If the command load did 
+		not work the user will have the option to simply use the defaults 
+		'''
 		
 		self.velocity_bounds = velocity_bounds 
 		self.position_bounds = position_bounds
