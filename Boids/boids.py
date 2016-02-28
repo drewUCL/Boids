@@ -56,7 +56,8 @@ class BoidsMethod(object):
 		velocity_difference = self.find_differences(self.velocities)
 		distances = self.compute_limit(position_difference, self.threshold)
 		reset_velocity_position_rule = self.limit_descisions(velocity_difference, distances)
-		self.velocities -= np.mean(reset_velocity_position_rule,1) * self.speed_with_nearby_boids_calibration
+		self.velocities -= np.mean(reset_velocity_position_rule,1) * \
+							self.speed_with_nearby_boids_calibration
 		
 	def limit_descisions(self, differences, distance):
 		differences[0,:,:][distance] = 0 
@@ -69,7 +70,8 @@ class BoidsMethod(object):
 		return sum_square_error > threshold_value
 	
 	def find_differences(self, positions):
-		difference = positions[:,np.newaxis,:] - positions[:,:,np.newaxis]
+		difference = positions[:,np.newaxis,:] - \
+					 positions[:,:,np.newaxis]
 		return difference 
 		
 	def fly_away_from_nearby_boids(self):
@@ -81,21 +83,25 @@ class BoidsMethod(object):
 	def fly_towards_middle(self):
 		center = np.mean(self.positions,1)
 		find_direction_to_travel = self.positions - center[:,np.newaxis]
-		self.velocities -= find_direction_to_travel * self.fly_to_middle_gravity
+		self.velocities -= find_direction_to_travel * \
+						   self.fly_to_middle_gravity
 	
 	def generate_boids_flock(self, lower_bound, upper_bound):
 		width = abs(lower_bound - upper_bound)
-		return (lower_bound[:, np.newaxis] + np.random.rand(2, self.count) * width[:, np.newaxis])
+		return (lower_bound[:, np.newaxis] + np.random.rand(2, self.count) \
+				* width[:, np.newaxis])
 	
 	def delploy_simulation(self):
 		figure = plt.figure()
 		axes = plt.axes(xlim=self.xlim, ylim=self.ylim)
 		self.scatter = axes.scatter(self.positions[0],self.positions[1])
-		anim = animation.FuncAnimation(figure, self.animate, frames = self.frames, interval = self.interval)
+		anim = animation.FuncAnimation(figure, self.animate,
+										frames = self.frames, 
+										interval = self.interval)
 		plt.show()
 
 	def animate(self, frame):
-	   self.update_boids() #self.positions, self.velocities
+	   self.update_boids()
 	   self.scatter.set_offsets(self.positions.transpose())
 	
 	def update_boids(self):	
@@ -104,9 +110,8 @@ class BoidsMethod(object):
 		self.try_to_match_speed_with_nearby_boids() # Try to match speed with nearby boids
 		self.move_according_to_velocities() # Move according to velocities
 
-if __name__ == "__main__":
-	# The object with simply the default values 
-	# It has been done like this so the user has the ability to overload from their own config file
+if __name__ == "__main__": 
+	# This has been left here to allow testing of this file
 	boid_object = BoidsMethod()
 	boid_object.delploy_simulation()
 	

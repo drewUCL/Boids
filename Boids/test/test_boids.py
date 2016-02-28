@@ -12,13 +12,9 @@ sys.path.insert(0,'..')
 from boids import BoidsMethod
 
 '''
-NOTE: STILL TO TEST test_generate_boids_flock
-	  # NEED TO ADD SIMULATE THE RANDOMNESS
-
 import random
 random.seed(100)
 print random.random()
-
 '''
 
 class test_session(object):	
@@ -60,34 +56,37 @@ class test_session(object):
 	
 	# Testing update_boids
 	def test_update_boids( self ):
-		with open(os.path.join(os.path.dirname(__file__),'fixtures', 'update_boids_1.yaml')) as data:
+		with open(os.path.join(os.path.dirname(__file__),'fixtures', 
+				  'update_boids_1.yaml')) as data:
 			self.generator( yaml.load(data), 'update_boids_1.yaml' )
 			
 	# Testing fly_towards_middle
 	def test_fly_towards_middle( self ):
-		with open(os.path.join(os.path.dirname(__file__),'fixtures', 'fly_towards_middle_1.yaml')) as data:
+		with open(os.path.join(os.path.dirname(__file__),'fixtures',
+				  'fly_towards_middle_1.yaml')) as data:
 			self.generator( yaml.load(data), 'fly_towards_middle_1.yaml' )
 
 	# Testing fly_away_from_nearby_boids
 	def test_fly_away_from_nearby_boids( self ):
-		with open(os.path.join(os.path.dirname(__file__),'fixtures', 'fly_away_from_nearby_boids_1.yaml')) as data:
+		with open(os.path.join(os.path.dirname(__file__),'fixtures', 
+				  'fly_away_from_nearby_boids_1.yaml')) as data:
 			self.generator( yaml.load(data), 'fly_away_from_nearby_boids_1.yaml' )
 			
 	# Testing try_to_match_speed_with_nearby_boids
 	def test_try_to_match_speed_with_nearby_boids( self ):
-		with open(os.path.join(os.path.dirname(__file__),'fixtures', 'try_to_match_speed_with_nearby_boids_1.yaml')) as data:
+		with open(os.path.join(os.path.dirname(__file__),'fixtures', 
+				  'try_to_match_speed_with_nearby_boids_1.yaml')) as data:
 			self.generator( yaml.load(data), 'try_to_match_speed_with_nearby_boids_1.yaml' )
 	
 	# Testing test_move_according_to_velocities
 	def test_move_according_to_velocities( self ):
-		with open(os.path.join(os.path.dirname(__file__),'fixtures', 'move_according_to_velocities_1.yaml')) as data:
+		with open(os.path.join(os.path.dirname(__file__),'fixtures',
+				  'move_according_to_velocities_1.yaml')) as data:
 			self.generator( yaml.load(data), 'move_according_to_velocities_1.yaml' )
 			
 	# Testing generate_boids_flock
 	def test_generate_boids_flock( self ):
-		'''
-		** seed some kind of randomness here **
-		'''
+		
 		pass
 	
 	# Testing initiation of config file
