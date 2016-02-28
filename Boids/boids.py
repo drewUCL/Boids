@@ -11,19 +11,18 @@ class BoidsMethod(object):
 	Description: A class to allow execution of boids methods 
 	'''
 	
-	def __init__(self, 
-				 position_bounds = [-450.0, 300.0, 50.0, 600.0], 
-				 velocity_bounds = [0.0, -20.0, 10.0, 20.0],
-			     count = 50,
-				 frames = 50,
-				 interval = 50,
-				 xlim = (-500,1500),
-				 ylim = (-500,1500),
-				 threshold = 10000, # Threshold for matching speeds
-				 must_fly_away = 100, # Threshold for flying away from nearby boids
-				 speed_with_nearby_boids_calibration = 0.125,
-				 fly_to_middle_gravity = 0.01
-				 ):
+	def __init__(self,
+                 position_bounds = [-450.0, 300.0, 50.0, 600.0],
+                 velocity_bounds = [0.0, -20.0, 10.0, 20.0],
+                 count = 50,
+                 frames = 50,
+                 interval = 50,
+                 xlim = (-500,1500),
+                 ylim = (-500,1500),
+                 threshold = 10000, # Threshold for matching speeds
+                 must_fly_away = 100, # Threshold for flying away from nearby boids
+                 speed_with_nearby_boids_calibration = 0.125,
+                 fly_to_middle_gravity = 0.01 ):
 		''' The init has been provided with default values to overload by the config file from the command line interface. If the command load did not work the user will have the option to simply use the defaults '''
 		
 		self.velocity_bounds = velocity_bounds 
@@ -94,8 +93,8 @@ class BoidsMethod(object):
 		self.scatter = axes.scatter(self.positions[0],self.positions[1])
 		anim = animation.FuncAnimation( figure,
 		                                self.animate,
-										frames = self.frames,
-										interval = self.interval )
+                                        frames = self.frames,
+                                        interval = self.interval )
 		plt.show()
 
 	def animate(self, frame):
