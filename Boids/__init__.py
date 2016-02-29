@@ -29,10 +29,13 @@ def user_run_defaults():
 
 def command():
 	''' 
-	Description: A function to communicate with the command line. This function is linked with the setup.py file.
+	Description: A function to communicate with the command line. 
+	This function is linked with the setup.py file.
 	'''
 	
 	args = parser.parse_args()
+	parser = ArgumentParser(prog="Boids", description = "The Boids Flocking Bird Simulation")
+	parser.add_argument('--config','-c',help='Please select a config file',default='config.cfg')
 	
 	
 	try : 
@@ -40,7 +43,9 @@ def command():
 		with open(args.config) as c:
 			configuration.readfp(c)
 			
-			## Use data specific getters and setters, e.g getint for int and getfloat for float. First argument is in the [] within the config file is the section of the data
+			## Use data specific getters and setters, e.g getint for int and getfloat 
+			## for float. First argument is in the [] within the config file is the 
+			## section of the data
 			
 			## NOTE: json.loads is required when picking up arrays etc from config file
 			
@@ -58,7 +63,8 @@ def command():
 			# Load flock dynamics [Flock_Dynamics]
 			threshold = configuration.getint('Flock_Dynamics','threshold')
 			must_fly_away = configuration.getint('Flock_Dynamics','must_fly_away')
-			speed_with_nearby_boids_calibration = configuration.getfloat('Flock_Dynamics','speed_with_nearby_boids_calibration')
+			speed_with_nearby_boids_calibration = configuration.getfloat('Flock_Dynamics',
+			                                                             'speed_with_nearby_boids_calibration')
 			fly_to_middle_gravity = configuration.getfloat('Flock_Dynamics','fly_to_middle_gravity')
 			
 		## Now load the parameters into the BoidMethod
